@@ -1,0 +1,24 @@
+{%  extends 'GregPlatformBundle::layout.html.twig' %}
+
+{% block title %}
+Modifier une annonce - {{ parent() }}
+{% endblock %}
+
+{% block gregplatform_body %}
+
+<h2>Modifier une annonce</h2>
+
+{{ include("GregPlatformBundle::form.html.twig") }}
+
+<p>
+    Vous éditez une annonce déjà existante, merci de ne pas changer l'annonce déjà publiée.
+</p>
+
+<p>
+    <a href="{{ path('greg_platform_view', {'id':advert.id}) }}" class="btn btn-default">
+        <i class=""glyphicon glyphicon-chevron-left"></i>
+        Retour à l'annonce
+    </a>
+</p>
+
+{% endblock %}
