@@ -1,0 +1,16 @@
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+Annonces - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {# Sous titre commun à toutes les pages du bundle #}
+    <h1>Annonces</h1>
+    <hr>
+
+    {# Nouveau bloc qui pourra être rempli par les vues du bundle #}
+{% block gregplatform_body %}
+{% endblock %}
+
+{% endblock %}
