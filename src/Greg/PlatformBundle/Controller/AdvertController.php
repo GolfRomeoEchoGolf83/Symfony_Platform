@@ -73,4 +73,14 @@ class AdvertController extends Controller
     {
         return $this->render('GregPlatformBundle:Advert:delete.html.twig');
     }
+
+    public function menuAction($limit)
+    {
+        $listAdverts = array(
+            array('id' => 2, 'title' => 'Recherche développeur Symfony'),
+            array('id' => 5, 'title' => 'Mission de webmaster'),
+            array('id' => 9, 'title' => 'Offre de stage webdesigner')
+        );
+        return $this->render('GregPlatformBundle:Advert:menu.html.twig', array('listAdverts' => $listAdverts));
+    }
 }
