@@ -33,7 +33,14 @@ class AdvertController extends Controller
      */
     public function viewAction($id)
     {
-        return $this->render('GregPlatformBundle:Advert:view.html.twig', array('id' => $id));
+        $advert = array(
+            'title'     => 'Recherche développeur Symfony',
+            'id'        => $id,
+            'author'    => 'Alexandre',
+            'content'   => 'Nous recherchons un développeur Symfony débutant sur Nice.',
+            'date'      => new \DateTime()
+        );
+        return $this->render('GregPlatformBundle:Advert:view.html.twig', array('advert' => $advert));
     }
 
     /**
