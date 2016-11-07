@@ -1,0 +1,4 @@
+services:
+#    greg_platform.example:
+#        class: Greg\PlatformBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
