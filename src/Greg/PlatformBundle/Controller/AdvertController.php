@@ -24,7 +24,7 @@ class AdvertController extends Controller
         {
             throw new NotFoundHttpException('Page "' . $page . '" inexistante.');
         }
-        return $this->render('GregPlatformBundle:Advert:index.html.twig');
+        return $this->render('GregPlatformBundle:Advert:index.html.twig', array('listAdverts'=>array()));
     }
 
     /**
