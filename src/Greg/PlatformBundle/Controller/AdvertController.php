@@ -68,8 +68,16 @@ class AdvertController extends Controller
         {
             $request->getSession()->getFlashBag()->add('notice', 'annonce modifiée.');
             return $this->redirectionToRoute('greg_platform_view', array('id' => 5));
+
+            $advert = array(
+                'title'     => 'Recherche développeur Symfony',
+                'id'        => $id,
+                'author'    => 'Alexandre',
+                'content'   => 'Nous recherchons un développeur débutant sur Nice',
+                'date'      => new \DateTime()
+            );
         }
-        return $this->render('GregPlatformBundle:Advert:edit.html.twig');
+        return $this->render('GregPlatformBundle:Advert:edit.html.twig', array('advert' => $advert));
     }
 
     /**
