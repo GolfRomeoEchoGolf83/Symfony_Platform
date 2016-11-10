@@ -9,6 +9,7 @@
 
 namespace Greg\PlatformBundle\Controller;
 
+use Greg\PlatformBundle\Entity\Advert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -63,13 +64,9 @@ class AdvertController extends Controller
     public function viewAction($id)
     {
         // récupère l'annonce correspondant à l'id $id
-        $advert = array(
-            'title'     => 'Recherche développeur Symfony',
-            'id'        => $id,
-            'author'    => 'Alexandre',
-            'content'   => 'Nous recherchons un développeur Symfony débutant sur Nice.',
-            'date'      => new \DateTime()
-        );
+        $advert = new Advert;
+        $advert->setContent("Recherche développeur Symfony");
+
         return $this->render('GregPlatformBundle:Advert:view.html.twig', array('advert' => $advert));
     }
 
