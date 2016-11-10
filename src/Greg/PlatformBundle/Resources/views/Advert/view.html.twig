@@ -30,4 +30,9 @@ Lecture d'une annonce - {{ parent() }}
     </a>
 </p>
 
+    {# vérifie qu'une image est bien associée à l'annonce #}
+    {% if advert.image is not null %}
+        <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
+    {% endif %}
+
 {% endblock %}
