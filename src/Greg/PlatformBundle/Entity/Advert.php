@@ -49,6 +49,10 @@ class Advert
      */
     private $content;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Greg\PlatformBundle\Entity\Image", cascade={"persist})
+     */
+*     private $image;
 
     /**
      * Get id
