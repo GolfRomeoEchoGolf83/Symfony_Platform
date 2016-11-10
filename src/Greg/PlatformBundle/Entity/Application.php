@@ -42,6 +42,11 @@ class Application
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Greg\PlatformBundle\Entity\Advert")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $advert;
 
     /**
      * Get id
@@ -123,5 +128,29 @@ class Application
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set advert
+     *
+     * @param \Greg\PlatformBundle\Entity\Advert $advert
+     *
+     * @return Application
+     */
+    public function setAdvert(\Greg\PlatformBundle\Entity\Advert $advert)
+    {
+        $this->advert = $advert;
+
+        return $this;
+    }
+
+    /**
+     * Get advert
+     *
+     * @return \Greg\PlatformBundle\Entity\Advert
+     */
+    public function getAdvert()
+    {
+        return $this->advert;
     }
 }
