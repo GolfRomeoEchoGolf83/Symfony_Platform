@@ -10,6 +10,7 @@
 namespace Greg\PlatformBundle\Controller;
 
 use Greg\PlatformBundle\Entity\Advert;
+use Greg\PlatformBundle\Entity\Application;
 use Greg\PlatformBundle\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,7 +78,7 @@ class AdvertController extends Controller
      */
     public function addAction(Request $request)
     {
-        // création de l'entité
+        // création de l'entité Advert
         $advert = new Advert();
         $advert->setTitle('Recherche développeur Symfony');
         $advert->setAuthor('Alexandre');
@@ -88,14 +89,32 @@ class AdvertController extends Controller
         $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
         $image->setAlt('Job de rêve');
 
+        // creation d'une 1ere candidature
+        $application1 = new Application();
+        $application1->setAuthor('Marine');
+        $application1->setContent('Jai les qualités requises');
+
+        // creation d'une 2e candidature
+        $application2 = new Application();
+        $application2->setAuthor('Pierre');
+        $application2->setContent('Je suis motivé');
+
         // liaison de l'annonce avec l'image
         $advert->setImage($image);
+
+        // liaison des candidatures à l'annonce
+        $application1->setAdvert($advert);
+        $application2->setAdvert($advert);
 
         // récupération de l'EntityManager
         $em = $this->getDoctrine()->getManager();
 
         // 1: on persiste l'entité
         $em->persist($advert);
+
+        // 1bis : on persiste l'entité application
+        $em->persist($application1);
+        $em->persist($application2);
 
         // 2: on flush ce qui a été persisté
         $em->flush();
