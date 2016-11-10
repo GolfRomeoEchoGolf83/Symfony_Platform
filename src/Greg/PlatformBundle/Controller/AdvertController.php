@@ -79,12 +79,27 @@ class AdvertController extends Controller
      */
     public function addAction(Request $request)
     {
+        // création de l'entité
+        $advert = new Advert();
+        $advert->setTitle('Recherche développeur Symfony');
+        $advert->setAuthor('Alexandre');
+        $advert->setContent('Nous recherchons un développeur Symfony débutant');
+
+        // récupération de l'EntityManager
+        $em = $this->getDoctrine()->getManager();
+
+        // 1: on persiste l'entité
+        $em->persist($advert);
+
+        // 2: on flush ce qui a été persisté
+        $em->flush();
+
         // si la requête est en POST, alors le visiteur a soumis le formulaire
         if($request->isMethod('POST'))
         {
             // création et gestion du formulaire
             $request->getSession()->getFlashBag()->add('notice', 'Annonce enregistrée.');
-            return $this->redirectToRoute('greg_platform_view', array('id' => 5));
+            return $this->redirectToRoute('greg_platform_view', array('id' => $advert->getId()));
         }
         // si on n'est pas en POST alors on affiche le formulaire
         return $this->render('GregPlatformBundle:Advert:add.html.twig');
