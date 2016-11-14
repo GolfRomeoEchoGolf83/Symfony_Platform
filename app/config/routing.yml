@@ -1,3 +1,7 @@
+greg_core:
+    resource: "@GregCoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
 greg_platform:
     resource: "@GregPlatformBundle/Resources/config/routing.yml"
     prefix:   /platform
