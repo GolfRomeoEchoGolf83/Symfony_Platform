@@ -2,6 +2,7 @@
 
 namespace Greg\PlatformBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -53,6 +54,28 @@ class Advert
      * @ORM\OneToOne(targetEntity="Greg\PlatformBundle\Entity\Image", cascade={"persist"})
      */
     private $image;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Greg\PlatformBundle\Entity\Category", cascade={"persist"})
+     * @ORM\JoinTable(name="greg_advert_category")
+     */
+    private $categories;
+
+    public function __construct()
+    {
+        $this->date         = new \DateTime();
+        $this->categories   = new ArrayCollection();
+    }
+
+    public function addCategory(Category $category)
+    {
+        $this->categories[] = $category;
+    }
+
+    public function removeCategory(Category $category)
+    {
+        $this->categories->removeElement($category);
+    }
 
 
     /**
@@ -212,5 +235,21 @@ class Advert
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param mixed $categories
+     */
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
     }
 }
