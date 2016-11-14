@@ -66,10 +66,22 @@ class AdvertController extends Controller
     public function viewAction($id)
     {
         // récupère l'annonce correspondant à l'id $id
-        $advert = new Advert;
-        $advert->setContent("Recherche développeur Symfony");
+        $em = $this->getDoctrine()->getManager();
+        $advert = $em->getRepository('GregPlatformBundle:Advert')->find($id);
 
-        return $this->render('GregPlatformBundle:Advert:view.html.twig', array('advert' => $advert));
+        if (null === $advert) {
+            throw new NotFoundHttpException("L'annonce d'id " .$id "n'existe pas.");
+        }
+
+        // récupère la liste des candidatures
+        $listApplication = $em
+            ->getRepository("GregPlatformBundle:Application")
+            ->findBy(array('advert' => $advert));
+
+        return $this->render('GregPlatformBundle:Advert:view.html.twig', array(
+            'advert' => $advert,
+            'listApplication' => $listApplication
+        ));
     }
 
     /**
