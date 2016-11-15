@@ -10,6 +10,7 @@
 namespace Greg\PlatformBundle\Controller;
 
 use Greg\PlatformBundle\Entity\Advert;
+use Greg\PlatformBundle\Entity\AdvertSkill;
 use Greg\PlatformBundle\Entity\Application;
 use Greg\PlatformBundle\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -63,11 +64,13 @@ class AdvertController extends Controller
      * @param $id
      * @return mixed
      */
-    public function viewAction($id)
+    public function viewAction($id, $listAdvertSkills, $listAdvertSkills)
     {
         // récupère l'annonce correspondant à l'id $id
         $em = $this->getDoctrine()->getManager();
-        $advert = $em->getRepository('GregPlatformBundle:Advert')->find($id);
+        $advert = $em
+            ->getRepository('GregPlatformBundle:Advert')
+            ->find($id);
 
         if (null === $advert) {
             throw new NotFoundHttpException("L'annonce d'id " .$id "n'existe pas.");
@@ -78,9 +81,15 @@ class AdvertController extends Controller
             ->getRepository("GregPlatformBundle:Application")
             ->findBy(array('advert' => $advert));
 
+        // récupère la liste des AdvertSkill
+        $listApplication = $em
+            ->getRepository('GregPlatformBundle:Skill')
+            ->findBy(array('advert' => $advert));
+
         return $this->render('GregPlatformBundle:Advert:view.html.twig', array(
-            'advert' => $advert,
-            'listApplication' => $listApplication
+            'advert'            => $advert,
+            'listApplication'   => $listApplication,
+            'listAdvertSkills'  => $listAdvertSkills
         ));
     }
 
@@ -90,11 +99,36 @@ class AdvertController extends Controller
      */
     public function addAction(Request $request)
     {
+        // récupère l'Entity Manager
+        $em = $this->getDoctrine()->getManager();
+
         // création de l'entité Advert
         $advert = new Advert();
         $advert->setTitle('Recherche développeur Symfony');
         $advert->setAuthor('Alexandre');
         $advert->setContent('Nous recherchons un développeur Symfony débutant');
+
+        // récupère les compétences
+        $listSkills = $em->getRepository('GregPlatformBundle:Skill')->findAll();
+
+        // pour chaque compétence
+        foreach ($listSkills as $skill) {
+            // nouvelle relation entre 1 annonce et 1 compétence
+            $advertSkill = new AdvertSkill();
+
+            // on la lie à l'annonce
+            $advertSkill->setAdvert($advert);
+            // on la lie à la compétence
+            $advertSkill->setSkill($skill);
+
+            // choix arbitraire sur le niveau de la compétence
+            $advertSkill->setLevel('Expert');
+
+            // on persiste
+            $em->persist($advert);
+        }
+        $em->persist($advert);
+        $em->flush();
 
         // creation de l'entité image
         $image = new Image();

@@ -14,6 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Advert
 {
     /**
+     *
+     * @ORM\OneToMany(targetEntity="Greg\PlatformBundle\Entity\Application", mappedBy="advert")
+     */
+    private $applications;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Greg\PlatformBundle\Entity\Category", cascade={"persist"})
      * @ORM\JoinTable(name="greg_advert_category")
      */
@@ -66,6 +72,7 @@ class Advert
     {
         $this->date         = new \DateTime();
         $this->categories   = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
     public function addCategory(Category $category)
@@ -251,5 +258,27 @@ class Advert
     public function setCategories($categories)
     {
         $this->categories = $categories;
+    }
+
+    public function addApplication(Application $application)
+    {
+        $this->applications[] = $application;
+
+        // liaison entre l'annonce et la candidature
+        $application->setAdvert($this);
+        return $this;
+    }
+
+    public function removeApplication(Application $application)
+    {
+        $this->applications->removeElement($application);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplications()
+    {
+        return $this->applications;
     }
 }

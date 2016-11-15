@@ -4,26 +4,36 @@ namespace Greg\PlatformBundle\Entity;
 
 /**
  * AdvertSkill
+ * @ORM\Entity
+ * @ORM\Table(name="greg_advert_skill")
  */
 class AdvertSkill
 {
     /**
      * @var int
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var string
+     * @ORM\Column="level", type="string", length=255)
      */
     private $level;
 
     /**
      * @var string
+     * @ORM\ManyToOne(targetEntity="Greg\PlatformBundle\Entity\Advert")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $advert;
 
     /**
      * @var string
+     * @ORM\ManyToOne(targetEntity="Greg\PlatformBundle\Entity\Skill")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $skill;
 
