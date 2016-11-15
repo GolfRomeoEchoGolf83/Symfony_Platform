@@ -2,6 +2,8 @@
 
 namespace Greg\PlatformBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Category
  * @ORM\Entity
@@ -9,12 +11,16 @@ namespace Greg\PlatformBundle\Entity;
 class Category
 {
     /**
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @var int
      */
     private $id;
 
     /**
      * @var string
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 

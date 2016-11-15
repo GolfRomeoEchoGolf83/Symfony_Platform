@@ -49,6 +49,27 @@ class Application
      */
     private $advert;
 
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function increase()
+    {
+        $this->getAdvert()->increaseApplication();
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function decrease()
+    {
+        $this->getAdvert()->decreaseApplication();
+    }
+
     /**
      * Get id
      *
@@ -93,8 +114,6 @@ class Application
     public function setContent($content)
     {
         $this->content = $content;
-
-        return $this;
     }
 
     /**
@@ -114,11 +133,9 @@ class Application
      *
      * @return Application
      */
-    public function setDate($date)
+    public function setDate(\DateTime $date)
     {
         $this->date = $date;
-
-        return $this;
     }
 
     /**
@@ -138,11 +155,9 @@ class Application
      *
      * @return Application
      */
-    public function setAdvert(\Greg\PlatformBundle\Entity\Advert $advert)
+    public function setAdvert(Advert $advert)
     {
         $this->advert = $advert;
-
-        return $this;
     }
 
     /**
@@ -153,21 +168,5 @@ class Application
     public function getAdvert()
     {
         return $this->advert;
-    }
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function increase()
-    {
-        $this->getAdvert()->increaseApplication();
-    }
-
-    /**
-     * @ORM\PreRemove()
-     */
-    public function decrease()
-    {
-        $this->getAdvert()->decreaseApplication();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Greg\PlatformBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 /**
  * AdvertSkill
  * @ORM\Entity
@@ -58,8 +59,6 @@ class AdvertSkill
     public function setLevel($level)
     {
         $this->level = $level;
-
-        return $this;
     }
 
     /**
@@ -79,11 +78,9 @@ class AdvertSkill
      *
      * @return AdvertSkill
      */
-    public function setAdvert($advert)
+    public function setAdvert(Advert $advert)
     {
         $this->advert = $advert;
-
-        return $this;
     }
 
     /**
@@ -103,11 +100,9 @@ class AdvertSkill
      *
      * @return AdvertSkill
      */
-    public function setSkill($skill)
+    public function setSkill(Skill $skill)
     {
         $this->skill = $skill;
-
-        return $this;
     }
 
     /**
