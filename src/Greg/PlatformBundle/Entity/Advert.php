@@ -14,6 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Advert
 {
     /**
+     * @ORM\ManyToMany(targetEntity="Greg\PlatformBundle\Entity\Category", cascade={"persist"})
+     * @ORM\JoinTable(name="greg_advert_category")
+     */
+    private $categories;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -55,11 +61,6 @@ class Advert
      */
     private $image;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Greg\PlatformBundle\Entity\Category", cascade={"persist"})
-     * @ORM\JoinTable(name="greg_advert_category")
-     */
-    private $categories;
 
     public function __construct()
     {
@@ -76,7 +77,6 @@ class Advert
     {
         $this->categories->removeElement($category);
     }
-
 
     /**
      * Get id

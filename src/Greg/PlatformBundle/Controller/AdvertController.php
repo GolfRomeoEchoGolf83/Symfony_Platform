@@ -149,7 +149,26 @@ class AdvertController extends Controller
      */
     public function editAction($id, Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         // récupère l'annonce correspondant à $id
+        $advert = $em->getRepository('GregPlatformBundle:Advert')->find($id);
+        if(null === $advert) {
+            throw new NotFoundHttpException("L'annonce d'id" .$id. "n'existe pas");
+        }
+
+        // findAll retourne toutes les catégories de la BDD
+        $listCategories = $em->getRepository('GregPlatformBundle:Category')->findAll();
+
+        // boucle sur les catégories pour lier à l'annonce
+        foreach ($listCategories as $category) {
+            $advert->addCategory($category);
+        }
+
+        // enregistrement
+        $em->flush();
+
+
         if($request->isMethode('POST'))
         {
             $request->getSession()->getFlashBag()->add('notice', 'annonce modifiée.');
@@ -172,7 +191,22 @@ class AdvertController extends Controller
      */
     public function deleteAction($id)
     {
+        $em = $this->getDoctrine()->getManager();
+
         // récupère l'annonce correspondant à $id
+        $advert = $em->getRepository('GregPlatformBundle:Advert')->find($id);
+
+        if(null === $advert) {
+            throw new NotFoundHttpException("L'annonce d'id " .$id. " n'existe pas");
+        }
+
+        // boucle sur les annonces
+        foreach ($advert->getCategories() as $category) {
+            $advert->removeCategory($category);
+        }
+
+        // modification
+        $em->flush();
 
         // gère la suppression de l'annonce
         return $this->render('GregPlatformBundle:Advert:delete.html.twig');

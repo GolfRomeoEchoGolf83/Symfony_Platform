@@ -4,6 +4,7 @@ namespace Greg\PlatformBundle\Entity;
 
 /**
  * Category
+ * @ORM\Entity
  */
 class Category
 {
