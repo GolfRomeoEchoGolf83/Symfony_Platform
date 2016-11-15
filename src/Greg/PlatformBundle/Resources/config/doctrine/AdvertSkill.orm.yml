@@ -1,0 +1,21 @@
+Greg\PlatformBundle\Entity\AdvertSkill:
+    type: entity
+    table: null
+    repositoryClass: Greg\PlatformBundle\Repository\AdvertSkillRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        level:
+            type: string
+            length: 255
+        advert:
+            type: string
+            length: 255
+        skill:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }

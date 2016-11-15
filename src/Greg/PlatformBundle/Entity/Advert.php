@@ -10,9 +10,22 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="advert")
  * @ORM\Entity(repositoryClass="Greg\PlatformBundle\Repository\AdvertRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Advert
 {
+    /**
+     * @ORM\Column(name="nb_applications", type="integer")
+     */
+    private $nbApplications = 0;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_at", type="datetime", nullable=true)
+     */
+    private $updateAt;
+
     /**
      *
      * @ORM\OneToMany(targetEntity="Greg\PlatformBundle\Entity\Application", mappedBy="advert")
@@ -74,6 +87,28 @@ class Advert
         $this->categories   = new ArrayCollection();
         $this->applications = new ArrayCollection();
     }
+
+    public function increaseApplication()
+    {
+        $this->nbApplications++;
+    }
+
+    public function decreaseApplication()
+    {
+        $this->nbApplications--;
+    }
+    /**
+     *
+     */
+    public function updateDate()
+    {
+        $this->setUpdatedAt(new \DateTime());
+    }
+
+    /*
+     * @ORM\PreUpdate
+     */
+    public function updateDate()
 
     public function addCategory(Category $category)
     {
