@@ -4,6 +4,7 @@ namespace Greg\PlatformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Advert
@@ -14,30 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Advert
 {
-    /**
-     * @ORM\Column(name="nb_applications", type="integer")
-     */
-    private $nbApplications = 0;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="update_at", type="datetime", nullable=true)
-     */
-    private $updateAt;
-
-    /**
-     *
-     * @ORM\OneToMany(targetEntity="Greg\PlatformBundle\Entity\Application", mappedBy="advert")
-     */
-    private $applications;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Greg\PlatformBundle\Entity\Category", cascade={"persist"})
-     * @ORM\JoinTable(name="greg_advert_category")
-     */
-    private $categories;
-
     /**
      * @var int
      *
@@ -78,7 +55,46 @@ class Advert
     /**
      * @ORM\OneToOne(targetEntity="Greg\PlatformBundle\Entity\Image", cascade={"persist"})
      */
+
+    /**
+     * @ORM\Column(name="published", type="boolean")
+     */
+    private $published = true;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Greg\PlatformBundle\Entity\Image", cascade={"persist")}
+     */
     private $image;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Greg\PlatformBundle\Entity\Category", cascade={"persist"})
+     * @ORM\JoinTable(name="greg_advert_category")
+     */
+    private $categories;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="Greg\PlatformBundle\Entity\Application", mappedBy="advert")
+     */
+    private $applications;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_at", type="datetime", nullable=true)
+     */
+    private $updateAt;
+
+    /**
+     * @ORM\Column(name="nb_applications", type="integer")
+     */
+    private $nbApplications = 0;
+
+    /**
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(name="slug", type="string", length=255, unique=true)
+     */
+    private $slug;
 
 
     public function __construct()
@@ -86,6 +102,14 @@ class Advert
         $this->date         = new \DateTime();
         $this->categories   = new ArrayCollection();
         $this->applications = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function updateDate()
+    {
+        $this->setUpdatedAt(new \DateTime());
     }
 
     public function increaseApplication()
@@ -96,28 +120,6 @@ class Advert
     public function decreaseApplication()
     {
         $this->nbApplications--;
-    }
-    /**
-     *
-     */
-    public function updateDate()
-    {
-        $this->setUpdatedAt(new \DateTime());
-    }
-
-    /*
-     * @ORM\PreUpdate
-     */
-    public function updateDate()
-
-    public function addCategory(Category $category)
-    {
-        $this->categories[] = $category;
-    }
-
-    public function removeCategory(Category $category)
-    {
-        $this->categories->removeElement($category);
     }
 
     /**
@@ -227,11 +229,6 @@ class Advert
     }
 
     /**
-     * @ORM\Column(name="published", type="boolean")
-     */
-    private $published = true;
-
-    /**
      * Set published
      *
      * @param boolean $published
@@ -265,7 +262,6 @@ class Advert
     public function setImage(\Greg\PlatformBundle\Entity\Image $image = null)
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -279,6 +275,16 @@ class Advert
         return $this->image;
     }
 
+    public function addCategory(Category $category)
+    {
+        $this->categories[] = $category;
+    }
+
+    public function removeCategory(Category $category)
+    {
+        $this->categories->removeElement($category);
+    }
+
     /**
      * @return mixed
      */
@@ -287,13 +293,6 @@ class Advert
         return $this->categories;
     }
 
-    /**
-     * @param mixed $categories
-     */
-    public function setCategories($categories)
-    {
-        $this->categories = $categories;
-    }
 
     public function addApplication(Application $application)
     {
@@ -315,5 +314,54 @@ class Advert
     public function getApplications()
     {
         return $this->applications;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt(\Datetime $updatedAt = null)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param integer $nbApplications
+     */
+    public function setNbApplications($nbApplications)
+    {
+        $this->nbApplications = $nbApplications;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getNbApplications()
+    {
+        return $this->nbApplications;
+    }
+
+    /**
+     * @param string $slug
+     */
+
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

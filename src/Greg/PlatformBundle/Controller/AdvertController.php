@@ -64,7 +64,7 @@ class AdvertController extends Controller
      * @param $id
      * @return mixed
      */
-    public function viewAction($id, $listAdvertSkills, $listAdvertSkills)
+    public function viewAction($id)
     {
         // récupère l'annonce correspondant à l'id $id
         $em = $this->getDoctrine()->getManager();
@@ -73,7 +73,7 @@ class AdvertController extends Controller
             ->find($id);
 
         if (null === $advert) {
-            throw new NotFoundHttpException("L'annonce d'id " .$id "n'existe pas.");
+            throw new NotFoundHttpException("L'annonce d'id " .$id. "n'existe pas.");
         }
 
         // récupère la liste des candidatures
