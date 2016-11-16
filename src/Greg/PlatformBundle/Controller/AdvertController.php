@@ -30,14 +30,30 @@ class AdvertController extends Controller
             // exception NotFoundHttpException : erreur 404
             throw new NotFoundHttpException('Page "' .$page. '" inexistante.');
         }
-        // récupère la liste des annonces avec findAll()
+
+        // fixation du nombre d'annonce par pages
+        $nbPerPage = 3;
+
+        // récupère l'objet paginator
         $listAdverts = $this->getDoctrine()
             ->getManager()
             ->getRepository('GregPlatformBundle:Advert')
-            ->getAdverts();
+            ->getAdverts($page, $nbPerPage);
 
-        // appel de template
-        return $this->render('GregPlatformBundle:Advert:index.html.twig', array('listAdverts' => $listAdverts));
+        // calcule le nombre total de pages avec count($listAdverts) qui retourne le nombre total d'annonces
+        $nbPages = ceil(count($listAdverts) / $nbPerPage);
+
+        // si la page n'existe pas retourne 404
+        if ($page > $nbPages) {
+            throw $this->createNotFoundException('Page "' .$page. '" inexistante.');
+        }
+
+        // appel de la vue
+        return $this->render('GregPlatformBundle:Advert:index.html.twig', array(
+            'listAdverts'   => $listAdverts,
+            'nbPages'       => $nbPages,
+            'page'          => $page
+        ));
     }
 
     /**

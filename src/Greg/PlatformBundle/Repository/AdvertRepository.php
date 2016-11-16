@@ -3,6 +3,7 @@
 namespace Greg\PlatformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * AdvertRepository
@@ -12,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class AdvertRepository extends EntityRepository
 {
-   public function getAdverts()
+   public function getAdverts($page, $nbPerPage)
    {
     $query = $this->createQueryBuilder('a')
         // jointure sur l'attribut image
@@ -24,7 +25,13 @@ class AdvertRepository extends EntityRepository
         ->orderBy('a.date', 'DESC')
         ->getQuery();
 
-       // retourne le resultat
-       return $query->getResult();
+       $query
+           // à partir de quelle annonce commencer la liste
+           ->setFirstResult(($page-1) * $nbPerPage)
+           // nombre d'annonce à afficher par page
+           ->setMaxResults($nbPerPage);
+
+       // retourne l'objet paginator qui correspond à la requête construite
+       return new Paginator($query, true);
    }
 }
