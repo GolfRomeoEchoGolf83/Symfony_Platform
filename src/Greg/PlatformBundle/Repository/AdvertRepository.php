@@ -3,7 +3,7 @@
 namespace Greg\PlatformBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
+
 /**
  * AdvertRepository
  *
@@ -12,21 +12,19 @@ use Doctrine\ORM\QueryBuilder;
  */
 class AdvertRepository extends EntityRepository
 {
-   public function getAdvertWithCategories(array $categoryNames)
+   public function getAdverts()
    {
-    $qb = $this->createQueryBuilder('a');
-       // jointure avec l'entité Catégory avec pour alia "c"
-
-       $qb
-           ->innerJoin('a.categories', 'c')
-           ->addSelect('c');
-
-       // filtre sur le nom des catégories
-       $qb->where($qb->expr()->in('c.name', $categoryNames));
+    $query = $this->createQueryBuilder('a')
+        // jointure sur l'attribut image
+        ->leftJoin('a.image', 'i')
+        ->addSelect('i')
+        // jointure sur l'attribut categories
+        ->leftJoin('a.categories', 'c')
+        ->addSelect('c')
+        ->orderBy('a.date', 'DESC')
+        ->getQuery();
 
        // retourne le resultat
-       return $qb
-           ->getQuery()
-           ->getResult();
+       return $query->getResult();
    }
 }

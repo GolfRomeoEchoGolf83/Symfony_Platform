@@ -12,7 +12,6 @@ namespace Greg\PlatformBundle\Controller;
 use Greg\PlatformBundle\Entity\Advert;
 use Greg\PlatformBundle\Entity\AdvertSkill;
 use Greg\PlatformBundle\Entity\Application;
-use Greg\PlatformBundle\Entity\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -35,7 +34,7 @@ class AdvertController extends Controller
         $listAdverts = $this->getDoctrine()
             ->getManager()
             ->getRepository('GregPlatformBundle:Advert')
-            ->findAll();
+            ->getAdverts();
 
         // appel de template
         return $this->render('GregPlatformBundle:Advert:index.html.twig', array('listAdverts' => $listAdverts));
