@@ -115,16 +115,33 @@ class AdvertController extends Controller
             ->add('content',    TextareaType::class)
             ->add('author',     TextType::class)
             ->add('published',  CheckboxType::class)
-            ->add('save',       SubmitType::class);
+            ->add('save',       SubmitType::class)
+            ->getForm();
 
-        // génère le formulaire à partir du formbuilder
-        $form = $formBuilder->getForm();
+        // si la requête est en POST
+        if ($request->isMethod('POST')) {
+            // lien requête <-> formulaire
+            // $advert contient les valeurs entrées dans le formulaire
+            $form->handleRequest($request);
 
-        // passe la méthode createView() du formulaire à la vue pour afficher le formulaire
+            // vérifie que les valeurs sont correctes
+            if($form->isValid()) {
+                // enregistre l'objet $advert dans la BDD
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($advert);
+                $em->flush();
 
+                $request->getSession()->getFlashBag()->add('notice', 'annonce enregistrée');
+
+                // redirige vers la page de visualisation des annonces
+                return $this->redirectToRoute('greg_platform_view', array(
+                    'id'    => $advert->getId()
+                ));
+            }
+        }
 
         return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
-            'form' => $form->createView(),
+            'form'   => $form->createView(),
         ));
     }
 
