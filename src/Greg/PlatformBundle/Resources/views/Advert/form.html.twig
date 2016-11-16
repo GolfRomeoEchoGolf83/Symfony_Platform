@@ -1,5 +1,44 @@
 <h3>Formulaire d'annonce</h3>
 
 <div class="well">
-    {{ form(form) }}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+    {# Erreurs générales du formulaire #}
+    {{ form_errors(form) }}
+
+    {# Génération du label + error + widget pour un champ #}
+    {{ form_row(form.date) }}
+
+    {# Génération manuelle et éclatée :#}
+    <div class="form-group">
+        {# Génération du label #}
+        {{ form_label(form.title, "Titre de l'annonce", {'label_attr': {'class':'col-sm-2 control-label'}}) }}
+        {# Affichage des erreurs pour ce champ #}
+        {{ form_errors(form.title) }}
+
+        <div class="col-sm-10">
+            {# Génération de l'input #}
+            {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    {# idem second champ #}
+    <div class="form-group">
+        {{ form_label(form.title, "Titre de l'annonce", {'label_attr': {'class':'col-sm-2 control-label'}}) }}
+        {{ form_errors(form.title) }}
+        <div class="col-sm-10">
+            {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    {{ form_row(form.author) }}
+    {{ form_row(form.published) }}
+
+    {# Bouton : affichage du widget #}
+    {{ form_widget(form.save, {'attr': 'btn btn-primary'}) }}
+
+    {# génération autormatique des champs non écrits et cachés #}
+    {{ form_rest(form) }}
+
+    {{ form_end(form) }}
 </div>
