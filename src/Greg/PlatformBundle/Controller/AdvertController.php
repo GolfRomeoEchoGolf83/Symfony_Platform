@@ -12,13 +12,8 @@ namespace Greg\PlatformBundle\Controller;
 use Greg\PlatformBundle\Entity\Advert;
 use Greg\PlatformBundle\Entity\AdvertSkill;
 use Greg\PlatformBundle\Entity\Application;
+use Greg\PlatformBundle\Form\AdvertType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -105,34 +100,15 @@ class AdvertController extends Controller
         // création d'un objet Advert
         $advert = new Advert();
 
-        // préremplissage du formulaire avec la date du jour
-        $advert->setDate(new \DateTime());
-
         // création d'un formbuilder avec form factory
-        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $advert);
-
-        // ajout des champs de l'entité que l'on veut dans le formulaire
-        $formBuilder
-            ->add('date',       DateType::class)
-            ->add('title',      TextType::class)
-            ->add('content',    TextareaType::class)
-            ->add('author',     TextType::class)
-            ->add('published',  CheckboxType::class, array('required' => false))
-            ->add('save',       SubmitType::class)
-            ->getForm();
+        $form = $this->get('form.factory')->create(AdvertType::class, $advert);
 
         // si la requête est en POST
-        if ($request->isMethod('POST')) {
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             // lien requête <-> formulaire
-            // $advert contient les valeurs entrées dans le formulaire
-            $form->handleRequest($request);
-
-            // vérifie que les valeurs sont correctes
-            if($form->isValid()) {
-                // enregistre l'objet $advert dans la BDD
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($advert);
-                $em->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($advert);
+            $em->flush();
 
                 $request->getSession()->getFlashBag()->add('notice', 'annonce enregistrée');
 
