@@ -105,6 +105,9 @@ class AdvertController extends Controller
         // création d'un objet Advert
         $advert = new Advert();
 
+        // préremplissage du formulaire avec la date du jour
+        $advert->setDate(new \DateTime());
+
         // création d'un formbuilder avec form factory
         $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $advert);
 
