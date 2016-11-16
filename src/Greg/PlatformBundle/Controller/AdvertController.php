@@ -13,6 +13,12 @@ use Greg\PlatformBundle\Entity\Advert;
 use Greg\PlatformBundle\Entity\AdvertSkill;
 use Greg\PlatformBundle\Entity\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -96,14 +102,30 @@ class AdvertController extends Controller
      */
     public function addAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
+        // création d'un objet Advert
+        $advert = new Advert();
 
-        if ($request->isMethod('POST')) {
-            $request->getSession()->getFlashBag()->add('notice', 'Annonce enregistrée.');
+        // création d'un formbuilder avec form factory
+        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $advert);
 
-            return $this->redirectToRoute('greg_platform_view', array('id' => $advert->getId()));
-        }
-        return $this->render('OCPlatformBundle:Advert:add.html.twig');
+        // ajout des champs de l'entité que l'on veut dans le formulaire
+        $formBuilder
+            ->add('date',       DateType::class)
+            ->add('title',      TextType::class)
+            ->add('content',    TextareaType::class)
+            ->add('author',     TextType::class)
+            ->add('published',  CheckboxType::class)
+            ->add('save',       SubmitType::class);
+
+        // génère le formulaire à partir du formbuilder
+        $form = $formBuilder->getForm();
+
+        // passe la méthode createView() du formulaire à la vue pour afficher le formulaire
+
+
+        return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**

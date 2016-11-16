@@ -83,7 +83,7 @@ class Advert
      *
      * @ORM\Column(name="update_at", type="datetime", nullable=true)
      */
-    private $updateAt;
+    private $updatedAt;
 
     /**
      * @ORM\Column(name="nb_applications", type="integer")
@@ -122,6 +122,8 @@ class Advert
         $this->nbApplications--;
     }
 
+
+    // Getters et Setters
     /**
      * Get id
      *
