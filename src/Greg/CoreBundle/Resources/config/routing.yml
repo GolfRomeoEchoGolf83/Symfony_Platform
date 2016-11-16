@@ -1,3 +1,7 @@
 greg_core_homepage:
     path:     /
     defaults: { _controller: GregCoreBundle:Core:index }
+
+greg_core_contact:
+    path:     /contact
+    defaults: { _controller: GregCoreBundle:Core:contact }
