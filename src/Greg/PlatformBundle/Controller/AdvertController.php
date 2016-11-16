@@ -114,7 +114,7 @@ class AdvertController extends Controller
             ->add('title',      TextType::class)
             ->add('content',    TextareaType::class)
             ->add('author',     TextType::class)
-            ->add('published',  CheckboxType::class)
+            ->add('published',  CheckboxType::class, array('required' => false))
             ->add('save',       SubmitType::class)
             ->getForm();
 
