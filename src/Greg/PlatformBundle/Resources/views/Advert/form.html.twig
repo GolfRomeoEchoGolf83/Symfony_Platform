@@ -37,8 +37,72 @@
     {# Bouton : affichage du widget #}
     {{ form_widget(form.save, {'attr': 'btn btn-primary'}) }}
 
+
+    {{ form_row(form.categories) }}
+    <a href="#" id="add_category" class="btn btn-default">Ajouter une catégorie</a>
+
     {# génération autormatique des champs non écrits et cachés #}
     {{ form_rest(form) }}
 
     {{ form_end(form) }}
 </div>
+
+{# chargement de jQuery #}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+{# script javascript #}
+<script type="text/javascript">
+    $(document).ready(function(){
+        // récupère la balise <div> qui contient l'attribut "data-prototype"
+        var $container = $('div#advert_categories');
+        // définition d'un compteur pour nommer les champs à ajouter
+        var index = $container.find(':input').length;
+        // ajout d'un nouveau champ à chaque clic sur le lien d'ajout
+        $('#add_category').click(function(e) {
+            addCategory($container);
+            e.preventDefault(); // éviter qu'apparaise # dans URL
+            return false;
+        });
+
+        // ajout d'un premier champ si n'existe pas
+        if (index == 0) {
+            addCategory($container);
+        } else {
+            // sinon ajout de lien de suppression pour chaque des champs
+            $container.children('div').each(function() {
+                addDeleteLink($(this));
+            });
+        }
+
+        // ajout d'un formulaire CategoryType
+        function addCategory($container) {
+            var template = $container.attr('data-prototype')
+                    // le label et le nom sont remplacés dans le contenu data-prototype
+                    .replace(/__name__label__/g, 'Categorie n°' + (index+1))
+                    .replace(/__name__/g, index);
+
+            // objet jQuery qui contient le template
+            var $prototype = $(template);
+            // ajout d'un lien pour supprimer la catégorie
+            addDeleteLink($prototype);
+            // ajout du prototype modifié  à la fin de la <div>
+            $container.append($prototype);
+            // compteur incrémenté
+            index++;
+        }
+
+        // ajoute un lien de suppression de catégorie
+        function addDeleteLink($prototype) {
+            // création du lien
+            var $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+            // ajout du lien
+            $prototype.append($deleteLink);
+            // ajout du listener sur le clic du lien pour supprimer la catégorie
+            $deleteLink.click(function (e) {
+                $prototype.remove();
+                e.preventDefault();
+                return false;
+            });
+        }
+    });
+</script>
