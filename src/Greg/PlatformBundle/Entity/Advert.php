@@ -67,6 +67,7 @@ class Advert
     private $image;
 
     /**
+     * @ORM\OneToOne(targetEntity="Greg\PlatformBundle\Entity\Image", cascade={"persist"})
      * @ORM\ManyToMany(targetEntity="Greg\PlatformBundle\Entity\Category", cascade={"persist"})
      * @ORM\JoinTable(name="greg_advert_category")
      */

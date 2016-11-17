@@ -9,6 +9,7 @@ namespace Greg\PlatformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -22,12 +23,17 @@ class AdvertType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('date',      DateTimeType::class)
-            ->add('title',     TextType::class)
-            ->add('author',    TextType::class)
-            ->add('content',   TextareaType::class)
-            ->add('published', CheckboxType::class, array('required' => false))
-            ->add('image',     ImageType::class)
+            ->add('date',       DateTimeType::class)
+            ->add('title',      TextType::class)
+            ->add('author',     TextType::class)
+            ->add('content',    TextareaType::class)
+            ->add('published',  CheckboxType::class, array('required' => false))
+            ->add('image',      ImageType::class)
+            ->add('categories', CollectionType::class, array(
+                'entry_type'    => CategoryType::class,
+                'allow_add'     => true,
+                'allow_delete'  => true
+            ))
             ->add('save',      SubmitType::class);
     }
 
