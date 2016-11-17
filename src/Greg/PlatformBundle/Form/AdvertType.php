@@ -27,6 +27,7 @@ class AdvertType extends AbstractType
             ->add('author',    TextType::class)
             ->add('content',   TextareaType::class)
             ->add('published', CheckboxType::class, array('required' => false))
+            ->add('image',     ImageType::class)
             ->add('save',      SubmitType::class);
     }
 
