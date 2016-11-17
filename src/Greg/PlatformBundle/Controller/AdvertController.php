@@ -12,6 +12,7 @@ namespace Greg\PlatformBundle\Controller;
 use Greg\PlatformBundle\Entity\Advert;
 use Greg\PlatformBundle\Entity\AdvertSkill;
 use Greg\PlatformBundle\Entity\Application;
+use Greg\PlatformBundle\Form\AdvertEditType;
 use Greg\PlatformBundle\Form\AdvertType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,6 +106,7 @@ class AdvertController extends Controller
 
         // si la requête est en POST
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+
             // lien requête <-> formulaire
             $em = $this->getDoctrine()->getManager();
             $em->persist($advert);
@@ -135,24 +137,31 @@ class AdvertController extends Controller
 
         // récupère l'annonce correspondant à $id
         $advert = $em->getRepository('GregPlatformBundle:Advert')->find($id);
+
         if(null === $advert) {
             throw new NotFoundHttpException("L'annonce d'id" .$id. "n'existe pas");
         }
 
-        if($request->isMethode('POST'))
+        $form = $this->get('form.factory')->create(AdvertEditType::class, $advert);
+
+        if($request->isMethode('POST') && $form->handleRequest($request)->isValid())
         {
+            $em->flush();
             $request->getSession()->getFlashBag()->add('notice', 'annonce modifiée.');
-            return $this->redirectionToRoute('greg_platform_view', array('id' => 5));
+            return $this->redirectionToRoute('greg_platform_view', array(
+                'id' => 5));
 
         }
-        return $this->render('GregPlatformBundle:Advert:edit.html.twig', array('advert' => $advert));
+        return $this->render('GregPlatformBundle:Advert:edit.html.twig', array(
+            'advert'    => $advert,
+            'form'      => $form->createView()));
     }
 
     /**
      * @param $id
      * @return mixed
      */
-    public function deleteAction($id)
+    public function deleteAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -163,16 +172,23 @@ class AdvertController extends Controller
             throw new NotFoundHttpException("L'annonce d'id " .$id. " n'existe pas");
         }
 
-        // boucle sur les annonces
-        foreach ($advert->getCategories() as $category) {
-            $advert->removeCategory($category);
+        // Protection contre la faille CSRF sur les supressions d'annonce
+        $form = $this->get('form.factory')->create();
+
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            $em->remove($advert);
+            $em->flush();
+
+            $request->getSession()->getFlashBag()->add('info', "L'annonce a été supprimmée");
+
+            return $this->redirectToRoute('greg_platform_home');
         }
 
-        // modification
-        $em->flush();
-
         // gère la suppression de l'annonce
-        return $this->render('GregPlatformBundle:Advert:delete.html.twig');
+        return $this->render('GregPlatformBundle:Advert:delete.html.twig', array(
+            'advert'    => $advert,
+            'form'      => $form->createView(),
+        ));
     }
 
     public function menuAction($limit)

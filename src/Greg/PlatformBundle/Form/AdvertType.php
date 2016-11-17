@@ -7,6 +7,7 @@
  */
 namespace Greg\PlatformBundle\Form;
 
+use Greg\PlatformBundle\Repository\CategoryRepository;
 use Symfony\Bridge\Doctrine\Form\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -25,6 +26,9 @@ class AdvertType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // arbitraire : on récupère les données qui commencent pas un D
+        $pattern = 'D%';
+
         $builder
             ->add('date',       DateTimeType::class)
             ->add('title',      TextType::class)
@@ -32,9 +36,12 @@ class AdvertType extends AbstractType
             ->add('content',    TextareaType::class)
             ->add('image',      ImageType::class)
             ->add('categories', CollectionType::class, array(
-                'entry_type'    => CategoryType::class,
-                'allow_add'     => true,
-                'allow_delete'  => true
+                'class'         => 'Greg\PlatformBundle\Entity\Category',
+                'choice_label'  => 'name',
+                'multiple'      => true,
+                'query_builder' => function(CategoryRepository $repository) use($pattern) {
+                    return $repository->getLikeQueryBuilder($pattern);
+                }
             ))
             ->add('save',      SubmitType::class);
 
